@@ -126,6 +126,9 @@ const DRIVER_FORCE_PROXY = new Set<string>([
   "quarkuc",
   "chaoxing",
   "local",
+  "feishu",
+  "larksuite",
+  "lark",
 ])
 
 /** 默认代理（Go: Config.DefaultProxy() = PreferProxy） */
