@@ -271,7 +271,46 @@ export class FeishuDriver implements StorageDriver {
     srcPhys: string,
     dstPhys: string,
   ): Promise<void> {
-    throw new Error("Feishu server-side copy not supported; use client-side transfer")
+    const dstNode = await this.resolveNode(this.cleanPath(dstPhys))
+    if (!dstNode) {
+      throw new Error(`Destination directory not found: ${dstPhys}`)
+    }
+
+    for (const name of names) {
+      const srcPath = this.joinPath(this.cleanPath(srcPhys), name)
+      const srcNode = await this.resolveNode(srcPath)
+      if (!srcNode) {
+        throw new Error(`Source file not found: ${srcPath}`)
+      }
+
+      if (srcNode.type === 0 || srcNode.type === 4) {
+        await this.mkdir("", this.joinPath(dstPhys, name))
+        const children = await this.client.listAllChildren(srcNode.token)
+        const childNames = children.map((c) => (c.name || "").trim() || c.token).filter(Boolean)
+        if (childNames.length > 0) {
+          await this.copy(
+            srcPath,
+            this.joinPath(dstPhys, name),
+            childNames,
+            srcPath,
+            this.joinPath(dstPhys, name),
+          )
+        }
+      } else {
+        const item = await this.get("", srcPath)
+        if (!item.raw_url) {
+          throw new Error(`Cannot obtain download URL for ${name}`)
+        }
+        const res = await fetch(item.raw_url, {
+          headers: item.raw_url_headers || {},
+        })
+        if (!res.ok) {
+          throw new Error(`Failed to download ${name}: HTTP ${res.status}`)
+        }
+        const arrayBuf = await res.arrayBuffer()
+        await this.client.upload(name, Buffer.from(arrayBuf), dstNode.token)
+      }
+    }
   }
 
   async remove(
