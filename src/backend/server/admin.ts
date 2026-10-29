@@ -4367,7 +4367,16 @@ const driverConfigs: Record<string, any> = {
   Feishu: {
     name: "Feishu",
     default_mount_path: "/feishu",
-    common: COMMON_FIELDS,
+    common: [
+      ...BASE_FIELDS,
+      CUSTOM_CACHE_POLICIES_FIELD,
+      ENABLE_SIGN_FIELD,
+      DISABLE_INDEX_FIELD,
+      ...buildProxyFields("Feishu"),
+      DOWN_PROXY_URL_FIELD,
+      DISABLE_PROXY_SIGN_FIELD,
+      SEED_POLICY_FIELD,
+    ],
     additional: [
       {
         name: "base_url",
@@ -4405,7 +4414,16 @@ const driverConfigs: Record<string, any> = {
   LarkSuite: {
     name: "LarkSuite",
     default_mount_path: "/larksuite",
-    common: COMMON_FIELDS,
+    common: [
+      ...BASE_FIELDS,
+      CUSTOM_CACHE_POLICIES_FIELD,
+      ENABLE_SIGN_FIELD,
+      DISABLE_INDEX_FIELD,
+      ...buildProxyFields("LarkSuite"),
+      DOWN_PROXY_URL_FIELD,
+      DISABLE_PROXY_SIGN_FIELD,
+      SEED_POLICY_FIELD,
+    ],
     additional: [
       {
         name: "base_url",

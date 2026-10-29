@@ -135,6 +135,9 @@ const DRIVER_PREFER_PROXY = new Set<string>([
   "123pan",
   "123open",
   "123panshare",
+  "feishu",
+  "larksuite",
+  "lark",
 ])
 
 /**
