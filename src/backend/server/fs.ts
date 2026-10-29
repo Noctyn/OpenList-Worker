@@ -2039,3 +2039,19 @@ fsRouter.post("/archive/decompress", async (c) => {
     return c.json({ code: 500, message: safeErrorMessage(e), data: null }, 500)
   }
 })
+
+fsRouter.post("/transcode/play", (c) => {
+  return c.json({
+    code: 200,
+    message: "success",
+    data: { transcode: false, direct: true, reason: "disabled" },
+  })
+})
+
+fsRouter.post("/transcode", (c) => {
+  return c.json({
+    code: 200,
+    message: "success",
+    data: { transcode: false, direct: true, reason: "disabled" },
+  })
+})
