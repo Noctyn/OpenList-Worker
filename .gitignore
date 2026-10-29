@@ -27,6 +27,7 @@ public_data
 .dev.vars.*
 !.dev.vars.example
 .wrangler
+.cloudflare
 .reasonix
 
 # build artifacts

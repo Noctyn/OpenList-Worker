@@ -84,6 +84,26 @@ test("driver/list 包含 GitHub Releases 与 CNB Releases", async () => {
   ]) {
     assert.ok(cnbFields.includes(field), `CNB Releases 缺少字段 ${field}`)
   }
+
+  const feishu = body.data["Feishu"]
+  assert.ok(feishu, "Feishu 必须出现在驱动列表中")
+  assert.equal(feishu.name, "Feishu")
+  assert.equal(feishu.default_mount_path, "/feishu")
+  const feishuFields = feishu.additional.map((f: any) => f.name)
+  assert.ok(feishuFields.includes("cookie"))
+  assert.ok(feishuFields.includes("base_url"))
+  assert.ok(feishuFields.includes("root_folder_id"))
+
+  const lark = body.data["LarkSuite"]
+  assert.ok(lark, "LarkSuite 必须出现在驱动列表中")
+  assert.equal(lark.name, "LarkSuite")
+  assert.equal(lark.default_mount_path, "/larksuite")
+
+  const alidoc = body.data["Alidoc"]
+  assert.ok(alidoc, "Alidoc 必须出现在驱动列表中")
+  const alidocFields = alidoc.additional.map((f: any) => f.name)
+  assert.ok(alidocFields.includes("site"), "Alidoc 必须包含 site 字段")
+  assert.ok(alidocFields.includes("custom_base_url"), "Alidoc 必须包含 custom_base_url 字段")
 })
 
 test("driver/names 包含 GitHub Releases 与 CNB Releases", async () => {

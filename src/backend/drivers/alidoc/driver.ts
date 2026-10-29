@@ -9,11 +9,14 @@ import { sortFileItems } from "../../internal/driver/sort"
 import { AliDocAddition, AliDocDentry } from "./types"
 import { AliDocClient, aliDocApiBase, aliDocUserAgent } from "./util"
 
-export function normalizeAliDocAddition(a: any): AliDocAddition {
-  const norm = { ...(a || {}) } as any
-  norm.cookie = (norm.cookie || "").trim()
-  norm.root_folder_id = (norm.root_folder_id || "").trim()
-  return norm as AliDocAddition
+export function normalizeAliDocAddition(a: unknown): AliDocAddition {
+  const obj = a && typeof a === "object" ? (a as Record<string, unknown>) : {}
+  return {
+    cookie: typeof obj.cookie === "string" ? obj.cookie.trim() : "",
+    root_folder_id: typeof obj.root_folder_id === "string" ? obj.root_folder_id.trim() : "",
+    site: typeof obj.site === "string" ? obj.site.trim() : undefined,
+    custom_base_url: typeof obj.custom_base_url === "string" ? obj.custom_base_url.trim() : undefined,
+  }
 }
 
 function dentryToFileItem(d: AliDocDentry): FileItem {
@@ -37,9 +40,9 @@ export class AliDocDriver implements StorageDriver {
   // 路径 → dentryUuid 缓存（ID 型网盘驱动需要把名称路径解析成 ID）
   private idCache = new Map<string, string>()
 
-  constructor(addition: any) {
+  constructor(addition: unknown) {
     this.addition = normalizeAliDocAddition(addition)
-    this.client = new AliDocClient(this.addition.cookie)
+    this.client = new AliDocClient(this.addition)
   }
 
   async init(): Promise<void> {
@@ -145,8 +148,8 @@ export class AliDocDriver implements StorageDriver {
       raw_url: rawUrl,
       raw_url_headers: {
         "User-Agent": aliDocUserAgent,
-        Referer: aliDocApiBase + "/",
-        Origin: aliDocApiBase,
+        Referer: this.client.apiBase + "/",
+        Origin: this.client.apiBase,
       },
     }
   }

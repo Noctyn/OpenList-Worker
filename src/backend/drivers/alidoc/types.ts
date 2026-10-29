@@ -6,6 +6,10 @@ export interface AliDocAddition {
   cookie: string
   /** 根目录 dentryUuid */
   root_folder_id: string
+  /** 站点版本：china (国内版 alidocs.dingtalk.com), international (国际版 docs.dingtalk.io) */
+  site?: string
+  /** 自定义接口地址 (例如 https://docs.dingtalk.io)，留空则根据站点版本自动配置 */
+  custom_base_url?: string
 }
 
 export interface AliDocApiResp {

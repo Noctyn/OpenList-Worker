@@ -95,7 +95,7 @@ import { CFImgBedDriver } from "../../drivers/cloudflare_imgbed/driver"
 import { GuangYaPanDriver } from "../../drivers/guangyapan/driver"
 import { AutoIndexDriver } from "../../drivers/autoindex/driver"
 import { ProtonDriveDriver } from "../../drivers/proton_drive/driver"
-
+import { FeishuDriver, LarkSuiteDriver } from "../../drivers/feishu/driver"
 // LocalDriver is not available in Cloudflare Workers (no fs module).
 // When running in Node.js container mode, import dynamically on first use.
 let _localDriver: StorageDriver | null = null
@@ -1178,6 +1178,14 @@ async function createDriver(
   } else if (normDriver === "protondrive" || normDriver === "proton") {
     const addition = parseAddition(storageConfig)
     driver = new ProtonDriveDriver(addition)
+    await driver.init?.()
+  } else if (normDriver === "feishu") {
+    const addition = parseAddition(storageConfig)
+    driver = new FeishuDriver(addition)
+    await driver.init?.()
+  } else if (normDriver === "larksuite" || normDriver === "lark") {
+    const addition = parseAddition(storageConfig)
+    driver = new LarkSuiteDriver(addition)
     await driver.init?.()
   } else if (normDriver === "alidoc" || normDriver === "dingtalkdoc") {
     const addition = parseAddition(storageConfig)
